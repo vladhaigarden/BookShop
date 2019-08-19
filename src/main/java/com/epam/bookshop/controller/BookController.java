@@ -24,12 +24,13 @@ public class BookController {
     }
 
     @GetMapping
-    @JsonView(Views.IdPrice.class)
+    @JsonView(Views.Public.class)
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("{id}")
+    @JsonView(Views.Public.class)
     public Book getBook(@PathVariable Long id) {
         return bookService.getBook(id);
     }
