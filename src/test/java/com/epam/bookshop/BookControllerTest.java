@@ -115,7 +115,7 @@ public class BookControllerTest {
 
     @Test
     public void update_book_OK() throws Exception {
-        String bookInJson = "{\"name\": \"Harry Potter the philosopher's stone\",\"genre\": \"ADVENTURE\",\"price\": 35.50}";
+        String bookInJson = "{\"name\": \"Harry Potter the philosopher's stone\",\"genre\": \"\",\"price\": 35.50}";
         mockMvc.perform(put("/book/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(bookInJson))
@@ -124,7 +124,7 @@ public class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Harry Potter the philosopher's stone"))
-                .andExpect(jsonPath("$.genre").value("ADVENTURE"))
+                .andExpect(jsonPath("$.genre").value("OTHER"))
                 .andExpect(jsonPath("$.price").value(35.50));
     }
 
