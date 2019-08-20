@@ -12,9 +12,9 @@ public enum Genre {
     OTHER;
 
     @JsonCreator
-    public static Genre safeValueOf(String string) {
+    public static Genre safeValueOf(String value) {
         try {
-            return Genre.valueOf(string);
+            return Genre.valueOf(value);
         } catch (IllegalArgumentException e) {
             return OTHER;
         }
