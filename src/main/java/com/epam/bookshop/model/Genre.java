@@ -1,21 +1,22 @@
 package com.epam.bookshop.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum Genre {
 
-    ADVENTURE("adventure"),
-    DETECTIVE("detective"),
-    DRAMA("drama"),
-    FANTASY("fantasy"),
-    HORROR("horror");
+    ADVENTURE,
+    DETECTIVE,
+    DRAMA,
+    FANTASY,
+    HORROR,
+    OTHER;
 
-    private String value;
-
-    Genre(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
+    @JsonCreator
+    public static Genre safeValueOf(String value) {
+        try {
+            return Genre.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return OTHER;
+        }
     }
 }

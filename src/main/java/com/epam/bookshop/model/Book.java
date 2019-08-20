@@ -30,14 +30,14 @@ public class Book {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum('ADVENTURE','DETECTIVE','DRAMA','FANTASY','HORROR')")
+    @Column(columnDefinition = "enum('ADVENTURE','DETECTIVE','DRAMA','FANTASY','HORROR','OTHER')")
     @JsonView(Views.Public.class)
     private Genre genre;
 
     @JsonView(Views.Public.class)
     private BigDecimal price;
 
-    @Column(updatable = false)
+    @Column(name = "creation_date", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy--MM-dd HH:mm:ss")
     @JsonView(Views.Hidden.class)
     private LocalDateTime date;
