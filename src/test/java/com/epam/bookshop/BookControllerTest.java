@@ -92,6 +92,28 @@ public class BookControllerTest {
     }
 
     @Test
+    public void save_bookEmptyName_400() throws Exception {
+        String bookInJson = "{\"genre\": \"ADVENTURE\",\"price\": 54.50}";
+        mockMvc.perform(post("/book")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(bookInJson))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Name cannot be empty"));
+    }
+
+    @Test
+    public void save_bookEmptyPrice_400() throws Exception {
+        String bookInJson = "{\"name\": \"Robinson Crusoe\",\"genre\": \"ADVENTURE\"}";
+        mockMvc.perform(post("/book")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(bookInJson))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Price cannot be empty"));
+    }
+
+    @Test
     public void update_book_OK() throws Exception {
         String bookInJson = "{\"name\": \"Harry Potter the philosopher's stone\",\"genre\": \"ADVENTURE\",\"price\": 35.50}";
         mockMvc.perform(put("/book/1")
@@ -115,6 +137,17 @@ public class BookControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("No book found with id 6"));
+    }
+
+    @Test
+    public void update_bookIncorrectPrice_400() throws Exception {
+        String bookInJson = "{\"name\": \"Harry Potter the philosopher's stone\",\"genre\": \"ADVENTURE\",\"price\": -5}";
+        mockMvc.perform(put("/book/5")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(bookInJson))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Price cannot be less than 0"));
     }
 
     @Test
