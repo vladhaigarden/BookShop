@@ -43,7 +43,7 @@ public class Book {
     @JsonView(Views.Public.class)
     private BigDecimal price;
 
-    @Column(name = "creation_date", nullable = false, columnDefinition = "CURRENT_TIMESTAMP")
+    @Column(name = "creation_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy--MM-dd HH:mm:ss")
     @JsonView(Views.Hidden.class)
     private LocalDateTime date;
