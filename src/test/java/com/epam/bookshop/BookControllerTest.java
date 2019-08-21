@@ -99,7 +99,7 @@ public class BookControllerTest {
                 .content(bookInJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Name cannot be empty"));
+                .andExpect(content().string("Name cannot be empty."));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class BookControllerTest {
                 .content(bookInJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Price cannot be empty"));
+                .andExpect(content().string("Price cannot be empty."));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class BookControllerTest {
                 .content(bookInJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Price cannot be less than 0"));
+                .andExpect(content().string("Price cannot be less than 0."));
     }
 
     @Test

@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +24,6 @@ public class BookServiceImpl implements BookService {
         if (Objects.isNull(book)) {
             throw new BadRequestException("Book cannot be empty for saving.");
         }
-        book.setDate(LocalDateTime.now());
         log.info("IN BookServiceImpl save {}", book);
         return bookRepository.save(book);
     }
@@ -50,7 +48,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book update(Book updatedBook) {
         Book bookFromDb = getBook(updatedBook.getId());
-        BeanUtils.copyProperties(updatedBook, bookFromDb, "id");
+        BeanUtils.copyProperties(updatedBook, bookFromDb, "id", "date");
+        log.info("IN BookServiceImpl update {}", bookFromDb);
         return bookRepository.save(bookFromDb);
     }
 

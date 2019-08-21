@@ -29,7 +29,7 @@ public class Book {
     @JsonView(Views.Public.class)
     private Long id;
 
-    @NotBlank(message = "Name cannot be empty")
+    @NotBlank(message = "Name cannot be empty.")
     @JsonView(Views.Public.class)
     private String name;
 
@@ -38,12 +38,12 @@ public class Book {
     @JsonView(Views.Public.class)
     private Genre genre;
 
-    @DecimalMin(value = "0", message = "Price cannot be less than 0")
-    @NotNull(message = "Price cannot be empty")
+    @DecimalMin(value = "0", message = "Price cannot be less than 0.")
+    @NotNull(message = "Price cannot be empty.")
     @JsonView(Views.Public.class)
     private BigDecimal price;
 
-    @Column(name = "creation_date", updatable = false)
+    @Column(name = "creation_date", nullable = false, columnDefinition = "CURRENT_TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy--MM-dd HH:mm:ss")
     @JsonView(Views.Hidden.class)
     private LocalDateTime date;
