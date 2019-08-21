@@ -2,9 +2,13 @@ package com.epam.bookshop.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -15,7 +19,6 @@ import java.time.LocalDateTime;
  */
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "books")
@@ -26,6 +29,7 @@ public class Book {
     @JsonView(Views.Public.class)
     private Long id;
 
+    @NotBlank(message = "Name cannot be empty.")
     @JsonView(Views.Public.class)
     private String name;
 
@@ -34,10 +38,12 @@ public class Book {
     @JsonView(Views.Public.class)
     private Genre genre;
 
+    @DecimalMin(value = "0", message = "Price cannot be less than 0.")
+    @NotNull(message = "Price cannot be empty.")
     @JsonView(Views.Public.class)
     private BigDecimal price;
 
-    @Column(name = "creation_date", updatable = false)
+    @Column(name = "creation_date", nullable = false, columnDefinition = "CURRENT_TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy--MM-dd HH:mm:ss")
     @JsonView(Views.Hidden.class)
     private LocalDateTime date;
