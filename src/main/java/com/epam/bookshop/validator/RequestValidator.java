@@ -4,10 +4,8 @@ import com.epam.bookshop.exception.BadRequestException;
 import com.epam.bookshop.util.ErrorExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.context.annotation.RequestScope;
 
 @Component
-@RequestScope
 public final class RequestValidator {
 
     public void validateRequest(BindingResult bindingResult) {
