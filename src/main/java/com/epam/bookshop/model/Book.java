@@ -34,7 +34,6 @@ public class Book {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum('ADVENTURE','DETECTIVE','DRAMA','FANTASY','HORROR','OTHER')")
     @JsonView(Views.Public.class)
     private Genre genre;
 

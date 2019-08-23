@@ -1,10 +1,9 @@
 package com.epam.bookshop.controller;
 
-import com.epam.bookshop.exception.BadRequestException;
 import com.epam.bookshop.model.Book;
 import com.epam.bookshop.model.Views;
 import com.epam.bookshop.service.BookService;
-import com.epam.bookshop.util.ErrorExtractor;
+import com.epam.bookshop.validator.RequestValidator;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +20,13 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private RequestValidator requestValidator;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Book save(@Valid @RequestBody Book book, BindingResult bindingResult) {
-        validate(bindingResult);
+        requestValidator.validateRequest(bindingResult);
         return bookService.save(book);
     }
 
@@ -42,7 +44,7 @@ public class BookController {
 
     @PutMapping("{id}")
     public Book update(@PathVariable Long id, @Valid @RequestBody Book book, BindingResult bindingResult) {
-        validate(bindingResult);
+        requestValidator.validateRequest(bindingResult);
         book.setId(id);
         return bookService.update(book);
     }
@@ -51,11 +53,5 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Book book) {
         bookService.delete(book);
-    }
-
-    private void validate(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(ErrorExtractor.getErrors(bindingResult));
-        }
     }
 }
