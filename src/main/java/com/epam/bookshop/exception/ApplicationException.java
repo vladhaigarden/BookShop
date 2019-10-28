@@ -8,6 +8,10 @@ public abstract class ApplicationException extends RuntimeException {
     @Getter
     protected HttpStatus responseCode;
 
+    public ApplicationException() {
+
+    }
+
     public ApplicationException(String message) {
         super(message);
     }
