@@ -74,7 +74,7 @@ Vue.component('book-row',{
 props: ['book','editMethod','books'],
 template: '<div>'+
             '<b>{{book.id}}.</b> {{book.name}} <i>{{book.genre.toLowerCase()}}</i> ({{book.price}} $)'+
-            '<span style="position: absolute; right: -7%">' +
+            '<span style="position: absolute; right: -12%">' +
                  '<input type="button" value="Edit" @click="edit" />' +
                  '<input type="button" value="X" @click="del" />' +
             '</span>' +

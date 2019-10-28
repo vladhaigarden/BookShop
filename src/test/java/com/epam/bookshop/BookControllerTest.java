@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource("/application-test.properties")
+@TestPropertySource("/application.properties")
 @Sql(value = {"/create-book-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/create-book-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class BookControllerTest {
@@ -32,7 +33,7 @@ public class BookControllerTest {
     private BookController controller;
 
     @Test
-    public void find_productId_OK() throws Exception {
+    public void find_bookId_OK() throws Exception {
         mockMvc.perform(get("/book/5"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -49,6 +50,7 @@ public class BookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Harry Potter")))
                 .andExpect(jsonPath("$[0].genre", is("ADVENTURE")))
@@ -57,6 +59,61 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$[1].name", is("Sherlock Holmes")))
                 .andExpect(jsonPath("$[1].genre", is("DETECTIVE")))
                 .andExpect(jsonPath("$[1].price", is(21.9)));
+    }
+
+    @Test
+    public void find_booksPagination_OK() throws Exception {
+        mockMvc.perform(get("/book/?page=1&size=3"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(4)))
+                .andExpect(jsonPath("$[0].name", is("The Lord of the Rings")))
+                .andExpect(jsonPath("$[1].id", is(5)))
+                .andExpect(jsonPath("$[1].name", is("It")));
+    }
+
+    @Test
+    public void find_booksSort_OK() throws Exception {
+        mockMvc.perform(get("/book/?sort=id,desc"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$[0].id", is(5)))
+                .andExpect(jsonPath("$[0].name", is("It")))
+                .andExpect(jsonPath("$[4].id", is(1)))
+                .andExpect(jsonPath("$[4].name", is("Harry Potter")));
+    }
+
+    @Test
+    public void find_booksFilter_OK() throws Exception {
+        mockMvc.perform(get("/book/?search=price>30,genre:FANTASY"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(4)))
+                .andExpect(jsonPath("$[0].name", is("The Lord of the Rings")))
+                .andExpect(jsonPath("$[0].genre", is("FANTASY")))
+                .andExpect(jsonPath("$[0].price", is(51.20)));
+    }
+
+    @Test
+    public void find_booksPaginationSortFilter_OK() throws Exception {
+        mockMvc.perform(get("/book/?start=0&size=3&sort=price,desc&search=price<30"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Harry Potter")))
+                .andExpect(jsonPath("$[0].genre", is("ADVENTURE")))
+                .andExpect(jsonPath("$[0].price", is(25.70)))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("Sherlock Holmes")))
+                .andExpect(jsonPath("$[1].genre", is("DETECTIVE")))
+                .andExpect(jsonPath("$[1].price", is(21.90)));
     }
 
     @Sql(value = {"/create-book-after.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
