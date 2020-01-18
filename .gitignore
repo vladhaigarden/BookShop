@@ -1,0 +1,9 @@
+# Intellij
+.idea/
+*.iml
+
+# Compiled class file
+*.class
+
+### Maven ###
+target/
